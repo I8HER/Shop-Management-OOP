@@ -10,27 +10,33 @@ private:
     double price;
     int numberofItem;
     std::vector<std::string> itemlist;
+    std::vector<double> pricelist;
+    std::vector<int>stock;
+
 public:
     std::string getName() {
         return itemName;
     }
     void setName(std::string name) {
         this->itemName = name;
+        itemlist.push_back(itemName);
     }
     double getPrice() {
         return price;
     }
     void setPrice(double price) {
         this->price = price;
+        pricelist.push_back(price);
     }
     double getnumberofItem() {
         return numberofItem;
     }
     void setnumberofItem(int numberofItem) {
         this->numberofItem = numberofItem;
+        stock.push_back(numberofItem);
     }
     void setAll(std::string, double, int);
-    void buyItem(int);
+    void buyItem(int,std::string);
     shopManagment(std::string, double, int);
     shopManagment();
     int getNumberofItem() {
@@ -44,7 +50,9 @@ void shopManagment::setAll(std::string itemName, double price, int numberofItem)
     this->itemName = itemName;
     itemlist.push_back(itemName);
     this->price = price;
+    pricelist.push_back(price);
     this->numberofItem = numberofItem;
+    stock.push_back(numberofItem);
 }
 
 shopManagment::shopManagment(std::string itemName, double price, int numberofItem) {
@@ -59,13 +67,20 @@ shopManagment::shopManagment() {
     this->numberofItem = 0;
 }
 
-void shopManagment::buyItem(int number) {
-    this->numberofItem = numberofItem-number;
+void shopManagment::buyItem(int number, std::string item) {
+    std::vector<std::string>::iterator index;
+    index = std::find(itemlist.begin(), itemlist.end(), item);
+    if (index != itemlist.end()) {
+        this->stock[index - itemlist.begin()] = stock[index - itemlist.begin()] - number;
+    }
+    
 }
 
 
 void shopManagment::showItem() {  
-    std::cout << this->itemName << " is " << this->price << " , there is " << this->numberofItem << " left.\n";
+    for (int i = 0; i< itemlist.size(); i++) {
+        std::cout << this->itemlist[i] << " is " << this->pricelist[i] << " , there is " << this->stock[i] << " left.\n";
+    }
 }
 
 
@@ -79,11 +94,14 @@ void shopManagment::showItem() {
 
 int main()
 {
-    shopManagment computer;
-    computer.setAll("computer", 1500, 100);
-    computer.buyItem(5);
-    computer.showItem();
+    shopManagment techStore;
+    techStore.setAll("computer", 1500, 100);
+    techStore.setAll("CPU", 500, 10);
+    techStore.setAll("RAM", 100, 150);
+    techStore.setAll("GPU", 1000, 20);
 
+    techStore.buyItem(5, "computer");
+    techStore.showItem();
 
 
 
